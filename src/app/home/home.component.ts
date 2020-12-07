@@ -12,13 +12,10 @@ import { UsersService } from '../users.service';
 })
 export class HomeComponent implements OnInit {
 
-  users: User[];
   allUsers: any[];
-  selectedUser: number;
   user: User;
 
   myControl = new FormControl();
-  options: string[] = ['One', 'Two', 'Three'];
   filteredOptions: Observable<string[]>;
 
   constructor(private usersService: UsersService) {
@@ -26,25 +23,27 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.users = this.usersService.getUsers();
-    // this.usersService.getAllUsers().subscribe(data => this.allUsers = data);
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
-      map(value => this._filter(value))
+      map(value => this.filter(value))
     );
   }
 
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-
-    return this.options.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
+  filter(value: string): string[] {
+    if (this.allUsers != null) {
+      return this.allUsers.map(x => x.name).filter(option =>
+        option.toLowerCase().includes(value.toLowerCase()));
+    }
+    return null;
   }
 
-  onEditClick(user: any) {
-    // console.log('skill name', user);
-    // console.log('selectedUser', this.selectedUser);
-    this.usersService.getUser(this.selectedUser).subscribe(data => { this.user = data; });
-    // console.log('User', this.user);
+  getId(name: string): number {
+    return this.allUsers.find(user => user.name === name).id;
+  }
+
+  onEditClick(name: any) {
+    const id = this.getId(name);
+    this.usersService.getUser(id).subscribe(data => { this.user = data; });
   }
 
   closeCard() {
