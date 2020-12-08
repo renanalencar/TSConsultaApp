@@ -1,8 +1,8 @@
 <div>
-    <div>
+    <div *ngIf="names">
         <form class="example-form">
             <mat-form-field class="example-full-width">
-                <input type="text" placeholder="Digite o nome de usuário" aria-label="User" matInput
+                <input [(ngModel)]="selectedOption" type="text" placeholder="Digite o nome de usuário" aria-label="User" matInput
                     [formControl]="myControl" [matAutocomplete]="auto">
                 <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
                     (optionSelected)="onEditClick($event.option.value)">
@@ -14,25 +14,28 @@
         </form>
     </div>
     <div *ngIf="user != undefined">
-        <mat-card class="example-card">
-            <mat-card-header>
-                <mat-card-actions>
+        <div class="container flex-column">
+            <div class="flex-row box">
+                <div class="flex-item">
+                    Usuário selecionado:
+                </div>
+                <div class="flex-item close-button">
                     <button (click)="closeCard()">
                         <mat-icon>close</mat-icon>
                     </button>
-                </mat-card-actions>
-                <mat-card-title>Usuário selecionado:</mat-card-title>
-            </mat-card-header>
-            <div>
-                <div mat-card-avatar class="example-header-image"></div>
-                <div>
-                    <mat-card-content>
+                </div>
+            </div>
+            <div class="flex-row">
+                <div class="flex-item avatar">
+                    <div mat-card-avatar class="example-header-image"></div>
+                    
+                </div>
+                <div class="flex-column user-data">
                         <p>{{ user.name }}</p>
                         <p>{{ user.email }}</p>
                         <p>{{ user.phone }}</p>
-                    </mat-card-content>
                 </div>
             </div>
-        </mat-card>
+        </div>
     </div>
 </div>

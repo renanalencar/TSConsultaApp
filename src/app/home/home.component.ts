@@ -14,12 +14,18 @@ export class HomeComponent implements OnInit {
 
   allUsers: any[];
   user: User;
+  selectedOption: string;
 
   myControl = new FormControl();
   filteredOptions: Observable<string[]>;
+  names: string[];
 
   constructor(private usersService: UsersService) {
-    this.usersService.getAllUsers().subscribe(data => this.allUsers = data);
+    this.usersService.getAllUsers().subscribe(data => {
+      this.allUsers = data;
+      this.names = this.allUsers.map(x => x.name);
+      console.log('Names: ', this.names);
+    });
   }
 
   ngOnInit(): void {
@@ -27,14 +33,12 @@ export class HomeComponent implements OnInit {
       startWith(''),
       map(value => this.filter(value))
     );
+    console.warn('teste');
   }
 
   filter(value: string): string[] {
-    if (this.allUsers != null) {
-      return this.allUsers.map(x => x.name).filter(option =>
-        option.toLowerCase().includes(value.toLowerCase()));
-    }
-    return null;
+    const filterValue = value.toLowerCase();
+    return this.names.filter(option => option.toLowerCase().includes(filterValue));
   }
 
   getId(name: string): number {
@@ -48,5 +52,6 @@ export class HomeComponent implements OnInit {
 
   closeCard() {
     this.user = null;
+    this.selectedOption = '';
   }
 }
